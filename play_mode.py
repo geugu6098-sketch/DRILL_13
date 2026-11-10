@@ -1,5 +1,6 @@
 import game_framework
 from pico2d import *
+from sdl2 import SDLK_q
 import game_world
 from boy import Boy
 from grass import Grass
@@ -17,6 +18,10 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
             import pause_mode
             game_framework.push_mode(pause_mode)
+            return
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_q:
+            import item_mode
+            game_framework.push_mode(item_mode)
             return
         else:
             boy.handle_event(event)
