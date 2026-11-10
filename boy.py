@@ -2,7 +2,7 @@ from math import pi
 
 from pico2d import get_canvas_width, get_time, load_image
 from sdl2 import (SDL_KEYDOWN, SDL_KEYUP, SDLK_LEFT, SDLK_RIGHT,
-                  SDLK_SPACE)
+                  SDLK_e, SDLK_SPACE)
 from transitions import Machine
 
 import game_world
@@ -48,20 +48,23 @@ class Boy:
         self.frame = 0
 
     def fire_ball(self):
-        ball = Ball(self.x, self.y, self.face_dir * 10)
+        image_name = {
+            1: 'ball21x21.png',
+            2: 'ball41x41.png',
+        }.get(self.selected_ball)
+        if image_name is None:
+            return
+        ball = Ball(self.x, self.y, self.face_dir * 10, image_name)
         game_world.add_object(ball)
 
     def handle_event(self, event):
-        if (event.type == SDL_KEYDOWN and
-                event.key == SDLK_SPACE and
-                self.state == 'SLEEP'):
-            self.wake_up()
+        if event.type == SDL_KEYDOWN and event.key == SDLK_e:
+            self.fire_ball()
             return
 
-        if (event.type == SDL_KEYDOWN and
-                event.key == SDLK_SPACE and
-                self.state in ('IDLE', 'RUN')):
-            self.fire_ball()
+        if (event.type == SDL_KEYDOWN and event.key == SDLK_SPACE and
+                self.state == 'SLEEP'):
+            self.wake_up()
             return
 
         if (event.type not in (SDL_KEYDOWN, SDL_KEYUP) or
